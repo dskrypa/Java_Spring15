@@ -3,6 +3,11 @@ package chapter_06;
 import java.security.SecureRandom;
 import java.util.Scanner;
 
+/**
+ * Chapter 6 - Problem 39: Computer-Assisted Instruction
+ * @author Douglas Skrypa
+ * @version 2015.01.29
+ */
 public class StudentQuizzer {
 	private static String[] responses_positive = {
 		"Very good!", "Excellent!", "Nice work!", "Keep up the good work!"
