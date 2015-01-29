@@ -14,7 +14,7 @@ public class StudentQuizzer {
 	private int a, b;
 	private int numCorrect = 0, numWrong = 0;
 	private int difficulty;
-	private int qType;
+	private int qType, lastOp;
 	
 	public static void main(String[] args){
 		System.out.println("Welcome to the Computer-Assisted Instruction Quizzer.");
@@ -69,14 +69,22 @@ public class StudentQuizzer {
 		s.close();
 	}
 	
+	public void pickOperation(){
+		if (qType == 5){
+			lastOp = gen.nextInt(4)+1;
+		} else {
+			lastOp = qType;
+		}
+	}
+	
 	public String getQuestion(){
+		pickOperation();
 		String operation = null;
-		switch (qType) {
+		switch (lastOp) {
 			case 1:	operation = " plus ";	break;
 			case 2:	operation = " minus ";	break;
 			case 3:	operation = " times ";	break;
 			case 4:	operation = "divided by ";	break;
-			default: operation = " idklol ";	break;
 		}
 		a = gen.nextInt((int)Math.pow(10, difficulty));
 		b = gen.nextInt((int)Math.pow(10, difficulty));
@@ -142,5 +150,6 @@ public class StudentQuizzer {
 			} catch (NumberFormatException e) {}
 		}
 		this.qType = qType;
+		lastOp = qType;
 	}
 }
