@@ -17,47 +17,20 @@ public class StudentQuizzer {
 	private int qType;
 	
 	public static void main(String[] args){
-		Scanner s = new Scanner(System.in);
 		System.out.println("Welcome to the Computer-Assisted Instruction Quizzer.");
-		int diff = 0;
-		while ((diff > 5) || (diff < 1)) {
-			System.out.println("Please enter a difficulty level (between 1 and 5).");
-			String dlvl = s.nextLine();
-			try {
-				diff = Integer.parseInt(dlvl);
-			} catch (NumberFormatException e) {}
-		}
-		
-		System.out.println("Problem types:");
-		System.out.println("1. Addition Only");
-		System.out.println("2. Subtraction Only");
-		System.out.println("3. Multiplication Only");
-		System.out.println("4. Division Only");
-		System.out.println("5. Random");
-		int qType = 0;
-		while ((qType > 5) || (qType < 1)) {
-			System.out.println("Please enter a problem type to work on.");
-			String qt = s.nextLine();
-			try {
-				qType = Integer.parseInt(qt);
-			} catch (NumberFormatException e) {}
-		}
-		
-		s.close();
-		StudentQuizzer sq = new StudentQuizzer(diff, qType);
+		StudentQuizzer sq = new StudentQuizzer();
 		sq.runQuiz();
 	}
 	
-	public StudentQuizzer(final int difficulty, final int qType){
+	public StudentQuizzer(){
 		gen = new SecureRandom();
-		this.difficulty = difficulty;
-		this.qType = qType;
 	}
 	
 	public void runQuiz(){
 		Scanner s = new Scanner(System.in);
-		boolean canRun = true;
-		boolean askNew = true;
+		setDifficulty(s);
+		setType(s);
+		boolean canRun = true, askNew = true;
 		
 		while (canRun) {
 			if (askNew) {
@@ -131,5 +104,35 @@ public class StudentQuizzer {
 			numWrong = 0;
 		}
 		return response;
+	}
+	
+	private void setDifficulty(final Scanner s){
+		int diff = 0;
+		while ((diff > 5) || (diff < 1)) {
+			System.out.println("Please enter a difficulty level (between 1 and 5).");
+			String dlvl = s.nextLine();
+			try {
+				diff = Integer.parseInt(dlvl);
+			} catch (NumberFormatException e) {}
+		}
+		difficulty = diff;
+	}
+	
+	private void setType(final Scanner s){
+		System.out.println("Problem types:");
+		System.out.println("1. Addition Only");
+		System.out.println("2. Subtraction Only");
+		System.out.println("3. Multiplication Only");
+		System.out.println("4. Division Only");
+		System.out.println("5. Random");
+		int qType = 0;
+		while ((qType > 5) || (qType < 1)) {
+			System.out.println("Please enter a problem type to work on.");
+			String qt = s.nextLine();
+			try {
+				qType = Integer.parseInt(qt);
+			} catch (NumberFormatException e) {}
+		}
+		this.qType = qType;
 	}
 }
