@@ -11,21 +11,31 @@ public class StudentQuizzer {
 		"No.  Please try again.", "Wrong.  Try once more.", "Don't give up!", "No.  Keep trying."
 	};
 	private SecureRandom gen;
-	private int a, b;
-	private int numCorrect = 0, numWrong = 0;
-	private int difficulty;
-	private int qType, lastOp;
+	private int difficulty, qType, numCorrect, numWrong;
+	private float answer;
 	
+	/**
+	 * Main method to test/run StudentQuizzer
+	 * @param args runtime arguments (ignored)
+	 */
 	public static void main(String[] args){
 		System.out.println("Welcome to the Computer-Assisted Instruction Quizzer.");
 		StudentQuizzer sq = new StudentQuizzer();
 		sq.runQuiz();
 	}
 	
+	/**
+	 * Construct a new StudentQuizzer, initializing a new random number generator.
+	 */
 	public StudentQuizzer(){
 		gen = new SecureRandom();
+		numCorrect = 0;
+		numWrong = 0;
 	}
 	
+	/**
+	 * Main loop for posing questions and getting user responses.
+	 */
 	public void runQuiz(){
 		Scanner s = new Scanner(System.in);
 		setDifficulty(s);
@@ -34,7 +44,7 @@ public class StudentQuizzer {
 		
 		while (canRun) {
 			if (askNew) {
-				System.out.println(getQuestion());
+				System.out.print(getQuestion());
 			}
 			String inpt = s.nextLine();
 			if (inpt.equals("quit")) {
@@ -42,18 +52,17 @@ public class StudentQuizzer {
 				System.out.println("Goodbye.");
 				continue;
 			}
-			Integer val = null;
+			
+			Float val = null;
 			try {
-				val = Integer.parseInt(inpt);
+				val = Float.parseFloat(inpt);
 			} catch (NumberFormatException e) {
 				askNew = false;
-				System.out.println("Invalid input.  Please try again.");
+				System.out.print("Invalid input. (Type 'quit' to exit) Please try again: ");
 				continue;
 			}
 			
-			boolean correct = checkAnswer(val);
-			
-			if (correct) {
+			if (checkAnswer(val)) {
 				askNew = true;
 				System.out.println(getResponse(true));
 			} else {
@@ -69,32 +78,65 @@ public class StudentQuizzer {
 		s.close();
 	}
 	
-	public void pickOperation(){
+	/**
+	 * Picks an operation to use for the next question.
+	 * @return the int representing the operation to use
+	 */
+	public int pickOperation(){
 		if (qType == 5){
-			lastOp = gen.nextInt(4)+1;
+			return gen.nextInt(4)+1;
 		} else {
-			lastOp = qType;
+			return qType;
 		}
 	}
 	
+	/**
+	 * Generate a new question based on difficulty level and the type
+	 * of operation to use, and store the proper answer for later verification.
+	 * @return a String containing the question for the user
+	 */
 	public String getQuestion(){
-		pickOperation();
 		String operation = null;
-		switch (lastOp) {
-			case 1:	operation = " plus ";	break;
-			case 2:	operation = " minus ";	break;
-			case 3:	operation = " times ";	break;
-			case 4:	operation = "divided by ";	break;
+		float a = gen.nextInt((int)Math.pow(10, difficulty));
+		float b = gen.nextInt((int)Math.pow(10, difficulty));
+		switch (pickOperation()) {
+			case 1:
+				operation = " plus ";
+				answer = a + b;
+				break;
+			case 2:
+				operation = " minus ";
+				answer = a - b;
+				break;
+			case 3:
+				operation = " times ";
+				answer = a * b;
+				break;
+			case 4:
+				operation = " divided by ";
+				while (b == 0) {
+					b = gen.nextInt((int)Math.pow(10, difficulty));
+				}
+				answer = a / b;
+				break;
 		}
-		a = gen.nextInt((int)Math.pow(10, difficulty));
-		b = gen.nextInt((int)Math.pow(10, difficulty));
-		return "How much is " + a + operation + b + "?";
+		return "How much is " + (int)a + operation + (int)b + "? ";
 	}
 	
-	public boolean checkAnswer(final int val){
-		return val == (a * b);
+	/**
+	 * Check a given value against the proper answer.
+	 * @param val the user-provided value
+	 * @return true if val and answer are equal to the thousandths place
+	 */
+	public boolean checkAnswer(final float val){
+		return Math.floor(val*1000) == Math.floor(answer*1000);
 	}
 	
+	/**
+	 * Fetch a response to provide the user based on their input
+	 * @param positive true for a positive response, false for a negative response
+	 * @return a random response with the given tone
+	 */
 	public String getResponse(final boolean positive){
 		String[] responses;
 		if (positive) {
@@ -107,14 +149,19 @@ public class StudentQuizzer {
 		return responses[gen.nextInt(4)];
 	}
 	
+	/**
+	 * Check to see how well a student is performing, and provide an appropriate
+	 * message after every 10 student answers
+	 * @return null if fewer than 10 answers have been given, otherwise a message
+	 */
 	public String checkPercentage(){
 		String response = null;
 		if ((numCorrect + numWrong) == 10) {
 			float pct = (float)(numCorrect/10.0) * 100;
 			if (pct < 75) {
-				response = "Please ask your teacher for extra help.";
+				response = "Please ask your teacher for extra help.\n";
 			} else {
-				response = "Congratulations, you are ready to go to the next level!";
+				response = "Congratulations, you are ready to go to the next level!\n";
 			}
 			numCorrect = 0;
 			numWrong = 0;
@@ -122,10 +169,15 @@ public class StudentQuizzer {
 		return response;
 	}
 	
+	/**
+	 * Retrieve user input regarding the difficulty that they want to use,
+	 * looping until valid input is provided.
+	 * @param s the Scanner to use for user input
+	 */
 	private void setDifficulty(final Scanner s){
 		int diff = 0;
 		while ((diff > 5) || (diff < 1)) {
-			System.out.println("Please enter a difficulty level (between 1 and 5).");
+			System.out.print("Please enter a valid difficulty level (between 1 and 5): ");
 			String dlvl = s.nextLine();
 			try {
 				diff = Integer.parseInt(dlvl);
@@ -134,6 +186,11 @@ public class StudentQuizzer {
 		difficulty = diff;
 	}
 	
+	/**
+	 * Retrieve user input regarding the type of problems that they want to
+	 * solve, looping until valid input is provided.
+	 * @param s the Scanner to use for user input
+	 */
 	private void setType(final Scanner s){
 		System.out.println("Problem types:");
 		System.out.println("1. Addition Only");
@@ -143,13 +200,12 @@ public class StudentQuizzer {
 		System.out.println("5. Random");
 		int qType = 0;
 		while ((qType > 5) || (qType < 1)) {
-			System.out.println("Please enter a problem type to work on.");
+			System.out.print("Please enter a valid problem type to work on: ");
 			String qt = s.nextLine();
 			try {
 				qType = Integer.parseInt(qt);
 			} catch (NumberFormatException e) {}
 		}
 		this.qType = qType;
-		lastOp = qType;
 	}
 }
