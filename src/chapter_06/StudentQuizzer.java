@@ -70,9 +70,17 @@ public class StudentQuizzer {
 	}
 	
 	public String getQuestion(){
+		String operation = null;
+		switch (qType) {
+			case 1:	operation = " plus ";	break;
+			case 2:	operation = " minus ";	break;
+			case 3:	operation = " times ";	break;
+			case 4:	operation = "divided by ";	break;
+			default: operation = " idklol ";	break;
+		}
 		a = gen.nextInt((int)Math.pow(10, difficulty));
 		b = gen.nextInt((int)Math.pow(10, difficulty));
-		return "How much is " + a + " times " + b + "?";
+		return "How much is " + a + operation + b + "?";
 	}
 	
 	public boolean checkAnswer(final int val){
