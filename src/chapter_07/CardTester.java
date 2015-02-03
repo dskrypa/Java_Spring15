@@ -8,9 +8,19 @@ import common.BFWriter;
 public class CardTester {
 	public static void main(final String[] args) throws IOException {
 		DeckOfCards doc = new DeckOfCards();
+		testToConsole(doc);
+		//testToFile(doc);
+	}
+	
+	public static void testToConsole(final DeckOfCards doc) {
+		for (String line : processDeck(doc)) {
+			System.out.println(line);
+		}
+	}
+	
+	public static void testToFile(final DeckOfCards doc) throws IOException {
 		int numShuffles = 5000;
-		
-		BFWriter bfw = new BFWriter("C:/unix/home/user/classes/2015Q1/Java/temp.txt");
+		BFWriter bfw = new BFWriter("C:/linux/home/user/temp.txt");
 		for (int x = 0; x < numShuffles; x++) {
 			for (String line : processDeck(doc)) {
 				bfw.write(line + "\n");

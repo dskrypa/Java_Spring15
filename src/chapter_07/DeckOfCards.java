@@ -118,7 +118,7 @@ public class DeckOfCards {
 
 		int numSuits = suitCount.size();
 		
-		if (straight == 5) {
+		if (straight == hand.length) {
 			if (numSuits == 1) {
 				return "Straight Flush";
 			}
