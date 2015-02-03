@@ -1,23 +1,33 @@
 package chapter_07;
 
-public class Card {
-	private final String face;
-	private final String suit;
+public class Card implements Comparable<Card> 
+{
+	private final CardFace face;
+	private final CardSuit suit;
 	
-	public Card (final String cardFace, final String cardSuit) {
+	public Card (final CardFace cardFace, final CardSuit cardSuit) {
 		face = cardFace;
 		suit = cardSuit;
 	}
 	
 	public String toString() {
-		return face + " of " + suit;
+		return face.toString() + " of " + suit.toString();
 	}
 
-	public String getFace() {
+	public CardFace getFace() {
 		return face;
 	}
 
-	public String getSuit() {
+	public CardSuit getSuit() {
 		return suit;
+	}
+
+	@Override
+	public int compareTo(Card o) {
+		if (this.getSuit() != o.getSuit()) {
+			return this.getSuit().compareTo(o.getSuit());
+		} else {
+			return this.getFace().compareTo(o.getFace());
+		}
 	}
 }
