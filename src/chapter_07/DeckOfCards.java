@@ -4,6 +4,13 @@ import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.Hashtable;
 
+/**
+ * Chapter 7 - Problem 30: Card Shuffling and Dealing
+ * Poker hand rankings obtained from: http://www.wsop.com/poker-hands/
+ * @author Douglas Skrypa
+ * @version 2015.02.02
+ * https://github.com/dskrypa/Java_Spring15
+ */
 public class DeckOfCards {
 	private Card[] deck;
 	private int currentCard;
@@ -54,21 +61,29 @@ public class DeckOfCards {
 		return null;
 	}
 	
+	/**
+	 * Analyzes the given hand of cards for poker hands
+	 * @param hand an array of cards representing a player's hand
+	 * @return a String containing the name of the best poker hand for the given hand of cards
+	 */
 	public static String analyzeHand(final Card[] hand) {
 		Arrays.sort(hand);
 		Hashtable<CardFace, Integer> faceCount = new Hashtable<>();
 		Hashtable<CardSuit, Integer> suitCount = new Hashtable<>();
 		
+		//Iterate through the cards in the given hand
 		for (Card c : hand) {
 			CardFace face = c.getFace();
 			CardSuit suit = c.getSuit();
 			
+			//Keep count of the number of cards that have the same face
 			if (faceCount.containsKey(face)) {
 				faceCount.replace(face, faceCount.get(face)+1);
 			} else {
 				faceCount.put(face, 1);
 			}
 			
+			//Keep count of the number of cards that have the same suit
 			if (suitCount.containsKey(suit)) {
 				suitCount.replace(suit, suitCount.get(suit)+1);
 			} else {
@@ -76,6 +91,7 @@ public class DeckOfCards {
 			}
 		}
 		
+		//Determine whether or not the given hand contains 2-4 of a kind
 		boolean has4f = false, has3f = false, has2f = false;
 		for (Integer faceCounter : faceCount.values()) {
 			switch (faceCounter) {
@@ -85,10 +101,7 @@ public class DeckOfCards {
 			}
 		}
 		
-		if (has3f && has2f) {
-			return "Full House";
-		}
-		
+		//Prepare to check for a straight
 		boolean expand = false;
 		int[] faceVals = new int[hand.length];
 		for (int i = 0; i < hand.length; i++) {
@@ -103,6 +116,7 @@ public class DeckOfCards {
 		}
 		Arrays.sort(faceVals);
 		
+		//Determine whether or not the given hand contains a straight
 		int straight = 1;
 		int lastVal = faceVals[0];
 		for (int x = 1; x < faceVals.length; x++) {
@@ -118,17 +132,22 @@ public class DeckOfCards {
 
 		int numSuits = suitCount.size();
 		
-		if (straight == hand.length) {
-			if (numSuits == 1) {
-				return "Straight Flush";
+		//Return the name of the highest ranking Poker hand in the given set of cards
+		if ((straight == hand.length) && (numSuits == 1)) {
+			if ((faceVals.length > hand.length) && (faceVals[1] == 9)) {
+				return "Royal Flush";
 			}
-			return "Straight";
+			return "Straight Flush";
+		} else if (has4f) {
+			return "Four of a Kind";
+		} else if (has3f && has2f) {
+			return "Full House";
 		} else if (numSuits == 1) {
 			return "Flush";
-		} else if (has4f) {
-			return "Four of a kind";
+		} else if (straight == hand.length) {
+			return "Straight";
 		} else if (has3f) {
-			return "Three of a kind";
+			return "Three of a Kind";
 		} else if (has2f && (faceCount.size() == 3)) {
 			return "Two pairs";
 		} else if (has2f) {

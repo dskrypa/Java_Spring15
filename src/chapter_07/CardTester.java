@@ -5,6 +5,12 @@ import java.util.ArrayList;
 
 import common.BFWriter;
 
+/**
+ * Chapter 7 - Problem 30: Card Shuffling and Dealing
+ * @author Douglas Skrypa
+ * @version 2015.02.02
+ * https://github.com/dskrypa/Java_Spring15
+ */
 public class CardTester {
 	public static void main(final String[] args) throws IOException {
 		DeckOfCards doc = new DeckOfCards();
@@ -19,7 +25,7 @@ public class CardTester {
 	}
 	
 	public static void testToFile(final DeckOfCards doc) throws IOException {
-		int numShuffles = 5000;
+		int numShuffles = 10000;
 		BFWriter bfw = new BFWriter("C:/linux/home/user/temp.txt");
 		for (int x = 0; x < numShuffles; x++) {
 			for (String line : processDeck(doc)) {
