@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 /**
  * Chapter 8 - Problem 14
  * @author Douglas Skrypa
- * @version 2015.02.03
+ * @version 2015.02.04
  */
 public class Date {
 	private int year, dayOfMonth;
@@ -86,13 +86,33 @@ public class Date {
 		}
 	}
 	
+	public String getMonthName() {
+		return month.getName();
+	}
+	
+	public int getDayOfMonth() {
+		return dayOfMonth;
+	}
+	
+	public int getYear() {
+		return year;
+	}
+	
+	public Month getMonth() {
+		return month;
+	}
+	
+	public int getMonthNumber() {
+		return month.ordinal();
+	}
+	
 	/**
 	 * Returns a String representation of this Date in the given format.
 	 * @param fmt format String
 	 * @return a String representation of this Date
 	 */
 	public String format(final String fmt) {
-		Pattern mFull = Pattern.compile("(MMMM+)");
+		Pattern mFull = Pattern.compile("[^M]*(MMMM+)[^M]*");
 		Matcher mFullm = mFull.matcher(fmt);
 		String monthRep = null, monthDisp = null;
 		String dayRep = null, dayDisp = null;
@@ -106,7 +126,7 @@ public class Date {
 			monthDisp = month.getAbbreviation();
 		} else if (fmt.contains("MM")) {
 			monthRep = "MM";
-			monthDisp = padLeft(Integer.toString(month.ordinal()),2);
+			monthDisp = String.format("%02d", month.ordinal());
 		} else if (fmt.contains("M")) {
 			monthRep = "M";
 			monthDisp = Integer.toString(month.ordinal());
@@ -114,24 +134,29 @@ public class Date {
 		
 		if (fmt.contains("YYYY")) {
 			yearRep = "YYYY";
-			yearDisp = padLeft(Integer.toString(year),4);
+			yearDisp = String.format("%04d", year);
 		} else if (fmt.contains("YY")) {
 			yearRep = "YY";
-			yearDisp = Integer.toString(year).substring(2,4);
+			
+			int truncated = year;
+			truncated %= 100;
+			yearDisp = String.format("%02d", truncated);
+			//yearDisp = String.format("%02d", year);
+			//yearDisp = Integer.toString(year).substring(2,4);
 		}
 		
 		if (fmt.contains("dd")) {
 			dayRep = "dd";
-			dayDisp = padLeft(Integer.toString(dayOfMonth),2);
+			dayDisp = String.format("%02d", dayOfMonth);
 		} else if (fmt.contains("d")) {
 			dayRep = "d";
 			dayDisp = Integer.toString(dayOfMonth);
 		} else if (fmt.contains("DDD")) {
 			dayRep = "DDD";
-			dayDisp = padLeft(Integer.toString(getDayOfYear()),3);
+			dayDisp = String.format("%03d", getDayOfYear());
 		} else if (fmt.contains("DD")) {
 			dayRep = "DD";
-			dayDisp = padLeft(Integer.toString(getDayOfYear()),2);
+			dayDisp = String.format("%02d", getDayOfYear());
 		} else if (fmt.contains("D")) {
 			dayRep = "D";
 			dayDisp = Integer.toString(getDayOfYear());
@@ -142,21 +167,6 @@ public class Date {
 		formatted = formatted.replace(monthRep, monthDisp);
 		formatted = formatted.replace(yearRep, yearDisp);
 		return formatted;
-	}
-	
-	/**
-	 * Pads the given String with 0s on the left to make the length of
-	 * the String equal to the given number
-	 * @param orig the original String
-	 * @param digits the length that the String should be
-	 * @return the padded String
-	 */
-	private String padLeft(final String orig, final int digits) {
-		String padded = orig;
-		while (padded.length() < digits) {
-			padded = "0" + padded;
-		}
-		return padded;
 	}
 	
 	/**
@@ -171,7 +181,7 @@ public class Date {
 	 * Calculates the day of the year that this Date represents
 	 * @return the day of the year
 	 */
-	private int getDayOfYear() {
+	public int getDayOfYear() {
 		int days = dayOfMonth;
 		for (int m = 1; m < month.ordinal(); m++) {
 			days += Month.values()[m].getDays();
