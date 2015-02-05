@@ -3,12 +3,10 @@ package chapter_07;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import common.BFWriter;
-
 /**
  * Chapter 7 - Problem 30: Card Shuffling and Dealing
  * @author Douglas Skrypa
- * @version 2015.02.02
+ * @version 2015.02.05
  * https://github.com/dskrypa/Java_Spring15
  */
 public class CardTester {
@@ -26,7 +24,7 @@ public class CardTester {
 	
 	public static void testToFile(final DeckOfCards doc) throws IOException {
 		int numShuffles = 10000;
-		BFWriter bfw = new BFWriter("C:/linux/home/user/temp.txt");
+		BFWriter bfw = new BFWriter("./temp.txt");
 		for (int x = 0; x < numShuffles; x++) {
 			for (String line : processDeck(doc)) {
 				bfw.write(line + "\n");
