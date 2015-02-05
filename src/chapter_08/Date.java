@@ -6,7 +6,8 @@ import java.util.regex.Pattern;
 /**
  * Chapter 8 - Problem 14
  * @author Douglas Skrypa
- * @version 2015.02.04
+ * @version 2015.02.05
+ * https://github.com/dskrypa/Java_Spring15
  */
 public class Date {
 	private int year, dayOfMonth;
@@ -86,24 +87,53 @@ public class Date {
 		}
 	}
 	
-	public String getMonthName() {
-		return month.getName();
+	public String	getMonthName() {	return month.getName();}
+	public int	getDayOfMonth() {	return dayOfMonth;}
+	public int	getYear() {		return year;}
+	public Month	getMonth() {		return month;}
+	public int	getMonthNumber() {	return month.ordinal();}
+	
+	/**
+	 * Determines whether or not this Date is in a leap year
+	 * @return true if it is in a leap year; false otherwise
+	 */
+	public static boolean isLeapYear(final int year) {
+		if ((year % 4) == 0) {
+			if ((year % 400) == 0) {
+				return true;
+			} else if ((year % 100) == 0) {
+				return false;
+			}
+			return true;
+		}
+		return false;
 	}
 	
-	public int getDayOfMonth() {
-		return dayOfMonth;
+	/**
+	 * Calculates the day of the year that this Date represents
+	 * @return the day of the year
+	 */
+	public int getDayOfYear() {
+		int days = dayOfMonth;
+		for (int m = 1; m < month.ordinal(); m++) {
+			days += Month.values()[m].getDays() + (((m == 2) && isLeapYear(year)) ? 1 : 0);
+		}
+		return days;
 	}
 	
-	public int getYear() {
-		return year;
-	}
-	
-	public Month getMonth() {
-		return month;
-	}
-	
-	public int getMonthNumber() {
-		return month.ordinal();
+	/**
+	 * Validates the given day in the given year, based on an already authenticated month.
+	 * @param day day of month
+	 * @param year year
+	 * @return true if the given values represent a valid date
+	 */
+	private boolean isValidDate(final int day, final int year) {
+		if (year < 0) {return false;}
+		int maxDay = this.month.getDays();
+		if ((this.month == Month.FEBRUARY) && isLeapYear(year)) {
+			maxDay = 29;
+		}
+		return ((0 < day) && (day <= maxDay));
 	}
 	
 	/**
@@ -137,12 +167,7 @@ public class Date {
 			yearDisp = String.format("%04d", year);
 		} else if (fmt.contains("YY")) {
 			yearRep = "YY";
-			
-			int truncated = year;
-			truncated %= 100;
-			yearDisp = String.format("%02d", truncated);
-			//yearDisp = String.format("%02d", year);
-			//yearDisp = Integer.toString(year).substring(2,4);
+			yearDisp = String.format("%02d", year%100);
 		}
 		
 		if (fmt.contains("dd")) {
@@ -162,53 +187,9 @@ public class Date {
 			dayDisp = Integer.toString(getDayOfYear());
 		}
 		
-		String formatted = fmt;
-		formatted = formatted.replace(dayRep, dayDisp);
+		String formatted = fmt.replace(dayRep, dayDisp);
 		formatted = formatted.replace(monthRep, monthDisp);
 		formatted = formatted.replace(yearRep, yearDisp);
 		return formatted;
 	}
-	
-	/**
-	 * Determines whether or not this Date is in a leap year
-	 * @return true if it is in a leap year; false otherwise
-	 */
-	public boolean isLeapYear() {
-		return (year % 4) == 0;
-	}
-	
-	/**
-	 * Calculates the day of the year that this Date represents
-	 * @return the day of the year
-	 */
-	public int getDayOfYear() {
-		int days = dayOfMonth;
-		for (int m = 1; m < month.ordinal(); m++) {
-			days += Month.values()[m].getDays();
-			if ((m == 2) && isLeapYear()) {
-				days += 1;
-			}
-		}
-		return days;
-	}
-	
-	/**
-	 * Validates the given day in the given year, based on an already authenticated month.
-	 * @param day day of month
-	 * @param year year
-	 * @return true if the given values represent a valid date
-	 */
-	private boolean isValidDate(final int day, final int year) {
-		if (year < 0) {
-			return false;
-		}
-		int maxDay = this.month.getDays();
-		if ((this.month == Month.FEBRUARY) && ((year % 4) == 0)) {
-			maxDay = 29;
-		}
-		if ((day < 0) || (maxDay < day)) {
-			return false;
-		}
-		return true;
-	}	
 }

@@ -7,10 +7,11 @@ import org.junit.Test;
 /**
  * Chapter 8 - Problem 14
  * @author Douglas Skrypa
- * @version 2015.02.04
+ * @version 2015.02.05
+ * https://github.com/dskrypa/Java_Spring15
  */
 @SuppressWarnings("unused")
-public class DateTest {
+public class DateTestSuite {
 	
 	@Test(expected = NullPointerException.class)
 	public void testNullMonthName() {
@@ -57,6 +58,11 @@ public class DateTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testNonLeapYear2() {
 		Date d = new Date("Feb", 29, 2015);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void testNonLeapYear3() {
+		Date d = new Date("Feb", 29, 1900);
 	}
 	
 	@Test

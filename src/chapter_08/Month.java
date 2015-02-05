@@ -4,6 +4,7 @@ package chapter_08;
  * Chapter 8 - Problem 14
  * @author Douglas Skrypa
  * @version 2015.02.03
+ * https://github.com/dskrypa/Java_Spring15
  */
 public enum Month {
 	NONE (null, null, 0),	//NONE included so that January has the value 1
