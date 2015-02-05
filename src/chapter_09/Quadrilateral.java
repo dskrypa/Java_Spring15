@@ -21,8 +21,6 @@ public class Quadrilateral {
 	public Double getLengthCD() {	return c.getDistance(d);}
 	public Double getLengthDA() {	return d.getDistance(a);}
 	
-	
-	
 	/*
 	 * ( Quadrilateral  Inheritance Hierarchy) Write an inheritance hierarchy for classes
 	 * Quadrilateral, 
