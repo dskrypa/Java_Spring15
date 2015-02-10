@@ -7,7 +7,7 @@ package chapter_09;
  * https://github.com/dskrypa/Java_Spring15
  */
 public class Quadrilateral {
-	private final Point a, b, c, d;
+	protected final Point a, b, c, d;
 	
 	public Quadrilateral(final Point a, final Point b, final Point c, final Point d) {
 		this.a = a;
@@ -16,31 +16,43 @@ public class Quadrilateral {
 		this.d = d;
 	}
 	
-	public Double getLengthAB() {	return a.getDistance(b);}
-	public Double getLengthBC() {	return b.getDistance(c);}
-	public Double getLengthCD() {	return c.getDistance(d);}
-	public Double getLengthDA() {	return d.getDistance(a);}
-	public Double getAngleABC() {	return Point.getAngle(a, b, c);}
-	public Double getAngleBCD() {	return Point.getAngle(b, c, d);}
-	public Double getAngleCDA() {	return Point.getAngle(c, d, a);}
-	public Double getAngleDAB() {	return Point.getAngle(d, a, b);}
+	public double getLengthAB() {	return a.getDistance(b);}
+	public double getLengthBC() {	return b.getDistance(c);}
+	public double getLengthCD() {	return c.getDistance(d);}
+	public double getLengthDA() {	return d.getDistance(a);}
+	public double getAngleABC() {	return Point.getAngle(a, b, c);}
+	public double getAngleBCD() {	return Point.getAngle(b, c, d);}
+	public double getAngleCDA() {	return Point.getAngle(c, d, a);}
+	public double getAngleDAB() {	return Point.getAngle(d, a, b);}
+	
+	/**
+	 * Determines whether or not this Quadrilateral contains at one pair of parallel sides
+	 * @return true if one or more pairs of parallel sides exist
+	 */
+	public boolean hasParallelSides() {
+		return getParallelSidePairCount() > 0;
+	}
+	
+	/**
+	 * Determines the number of pairs of parallel sides in this Quadrilateral
+	 * @return the number of pairs of parallel sides in this Quadrilateral
+	 */
+	public int getParallelSidePairCount() {
+		Point v1 = a.getVector(b), v2 = b.getVector(c), v3 = c.getVector(d), v4 = d.getVector(a);
+		boolean pw1 = v1.isParallel(v2) || v1.isParallel(v3) || v1.isParallel(v4);
+		boolean pw2 = v2.isParallel(v3) || v2.isParallel(v4);
+		boolean pw3 = v3.isParallel(v4);
+		
+		int count = 0;
+		count += pw1 ? 1 : 0;
+		count += pw2 ? 1 : 0;
+		count += pw3 ? 1 : 0;
+		return count;
+	}
 	
 	
 	/*
-	 * ( Quadrilateral  Inheritance Hierarchy) Write an inheritance hierarchy for classes
-	 * Quadrilateral, 
-Trapezoid
-Parallelogram
-Rectangle
-Square
-
-. Use Quadrilateral as the superclass
-of the hierarchy. Create and use a
-Point class
-to represent the points in each shape. Make the hier-
-archy as deep (i.e., as many levels) as possible. Specify the instance variables and methods for each
-class. The private instance variables of Quadrilateral should be the x-y coordinate pairs for the
-four endpoints of the Quadrilateral. Write a program that instantiates objects of your classes and
+Write a program that instantiates objects of your classes and
 outputs each object’s area (except Quadrilateral).
 	 */
 }
