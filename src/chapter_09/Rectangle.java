@@ -17,4 +17,16 @@ public class Rectangle extends Parallelogram {
 			throw new IllegalArgumentException("Rectangles require all angles to be 90 degrees.");
 		}
 	}
+	
+	/**
+	 * Calculates this Rectangle's area.
+	 * @return the area of this shape
+	 */
+	public double getArea() {
+		double la = getLengthAB(); 
+		double l2 = getLengthBC();
+		double l3 = getLengthCD();
+		double lb = la == l2 ? l3 : l2; 
+		return la * lb;
+	}
 }

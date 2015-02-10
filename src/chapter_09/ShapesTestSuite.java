@@ -58,7 +58,7 @@ public class ShapesTestSuite {
 	
 	@Test
 	public void testGoodTrapezoidConstruction() {
-		Point a = new Point(0,0), b = new Point(1,1), c = new Point(0,1), d = new Point(1,0);
+		Point a = new Point(0,0), c = new Point(0,3), b = new Point(4,3), d = new Point(0,5);
 		Trapezoid t = new Trapezoid(a, b, c, d);
 		assertNotNull(t);
 	}
@@ -145,5 +145,33 @@ public class ShapesTestSuite {
 	public void testBadSquareConstruction2() {
 		Point a = new Point(0,0), b = new Point(0,6), c = new Point(2,6), d = new Point(2,0);
 		Square s = new Square(a, b, c, d);
+	}
+	
+	@Test
+	public void testTrapezoidArea() {
+		Point a = new Point(0,0), c = new Point(0,3), b = new Point(4,3), d = new Point(0,5);
+		Trapezoid t = new Trapezoid(a, b, c, d);
+		assertEquals(13.5, t.getArea(), 0.0000001);
+	}
+	
+	@Test
+	public void testParallelogramArea() {
+		Point a = new Point(0,0), b = new Point(5,0), c = new Point(7,3), d = new Point(2,3);
+		Parallelogram p = new Parallelogram(a, b, c, d);
+		assertEquals(15, p.getArea(), 0.0000001);
+	}
+	
+	@Test
+	public void testRectangleArea() {
+		Point a = new Point(0,0), b = new Point(0,6), c = new Point(2,6), d = new Point(2,0);
+		Rectangle r = new Rectangle(a, b, c, d);
+		assertEquals(12, r.getArea(), 0.0000001);
+	}
+	
+	@Test
+	public void testSquareArea() {
+		Point a = new Point(0,0), b = new Point(0,6), c = new Point(6,6), d = new Point(6,0);
+		Square s = new Square(a, b, c, d);
+		assertEquals(36, s.getArea(), 0.0000001);
 	}
 }

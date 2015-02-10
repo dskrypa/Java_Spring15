@@ -17,4 +17,15 @@ public class Parallelogram extends Trapezoid {
 			throw new IllegalArgumentException("Parallelograms require at least 2 pairs of parallel sides.");
 		}
 	}
+	
+	/**
+	 * Calculates this Parallelogram's area.
+	 * @return the area of this shape
+	 */
+	public double getArea() {
+		double l1 = getLengthAB();
+		double l2 = getLengthBC();
+		double t = getAngleABC();
+		return l1 * l2 * Math.sin(t);
+	}
 }

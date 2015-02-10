@@ -18,4 +18,12 @@ public class Square extends Rectangle {
 			throw new IllegalArgumentException("Squares require all sides to be the same length.");
 		}
 	}
+	
+	/**
+	 * Calculates this Square's area.
+	 * @return the area of this shape
+	 */
+	public double getArea() {
+		return Math.pow(getLengthAB(), 2);
+	}
 }

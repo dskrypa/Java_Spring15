@@ -138,6 +138,38 @@ public class Point {
 		return x1*x2 + y1*y2 + z1*z2;
 	}
 	
+	/**
+	 * Calculates the cross (outer) product of this vector and the given vector
+	 * @param other another vector
+	 * @return the cross (outer) product
+	 */
+	public Point getCrossProduct(final Point other) {
+		double x1 = this.getX(), y1 = this.getY(), z1 = this.getZ();
+		double x2 = other.getX(), y2 = other.getY(), z2 = other.getZ();
+		return new Point(y1*z2-y2*z1, x1*z2-x2*z1, x1*y2-x2*y1);
+	}
+	
+	/**
+	 * Calculates the distance between this Point and the line that passes through Points a and b
+	 * @param a a Point on a line
+	 * @param b a Point on a line
+	 * @return the distance between this Point and line ab
+	 */
+	public double getParallelDistance(final Point a, final Point b) {
+		Point ap = new Point(getX() - a.getX(), getY() - a.getY(), getZ() - a.getZ());
+		Point ab = new Point(b.getX() - a.getX(), b.getY() - a.getY(), b.getZ() - a.getZ());
+		Point xprod = ap.getCrossProduct(ab);
+		return xprod.getMagnitude() / ab.getMagnitude();
+	}
+	
+	/**
+	 * Calculates the magnitude of this vector
+	 * @return the magnitude of this vector
+	 */
+	public double getMagnitude() {
+		return Math.sqrt(getX()*getX() + getY()*getY() + getZ()*getZ());		
+	}
+	
 	@Override
 	public String toString() {
 		if (z == null) {
