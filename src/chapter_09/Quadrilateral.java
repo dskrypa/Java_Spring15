@@ -20,6 +20,11 @@ public class Quadrilateral {
 	public Double getLengthBC() {	return b.getDistance(c);}
 	public Double getLengthCD() {	return c.getDistance(d);}
 	public Double getLengthDA() {	return d.getDistance(a);}
+	public Double getAngleABC() {	return Point.getAngle(a, b, c);}
+	public Double getAngleBCD() {	return Point.getAngle(b, c, d);}
+	public Double getAngleCDA() {	return Point.getAngle(c, d, a);}
+	public Double getAngleDAB() {	return Point.getAngle(d, a, b);}
+	
 	
 	/*
 	 * ( Quadrilateral  Inheritance Hierarchy) Write an inheritance hierarchy for classes
