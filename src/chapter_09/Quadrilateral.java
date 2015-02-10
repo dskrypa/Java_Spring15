@@ -3,7 +3,7 @@ package chapter_09;
 /**
  * Chapter 9 - Problem 8: Quadrilateral Inheritance Hierarchy
  * @author Douglas Skrypa
- * @version 2015.02.05
+ * @version 2015.02.10
  * https://github.com/dskrypa/Java_Spring15
  */
 public class Quadrilateral {
@@ -38,21 +38,17 @@ public class Quadrilateral {
 	 * @return the number of pairs of parallel sides in this Quadrilateral
 	 */
 	public int getParallelSidePairCount() {
-		Point v1 = a.getVector(b), v2 = b.getVector(c), v3 = c.getVector(d), v4 = d.getVector(a);
-		boolean pw1 = v1.isParallel(v2) || v1.isParallel(v3) || v1.isParallel(v4);
-		boolean pw2 = v2.isParallel(v3) || v2.isParallel(v4);
-		boolean pw3 = v3.isParallel(v4);
-		
+		Point v1 = a.getVector(b), v2 = b.getVector(c), v3 = c.getVector(d), v4 = a.getVector(d);
+		boolean pw1 = v1.isParallel(v3);
+		boolean pw2 = v2.isParallel(v4);
 		int count = 0;
 		count += pw1 ? 1 : 0;
 		count += pw2 ? 1 : 0;
-		count += pw3 ? 1 : 0;
 		return count;
 	}
 	
-	
-	/*
-Write a program that instantiates objects of your classes and
-outputs each object’s area (except Quadrilateral).
-	 */
+	@Override
+	public String toString() {
+		return this.getClass().toString() + "{" + a.toString() + "-" + b.toString() + "-" + c.toString() + "-" + d.toString() + "}";
+	}
 }

@@ -7,7 +7,7 @@ import org.junit.Test;
 /**
  * Chapter 9 - Problem 8: Quadrilateral Inheritance Hierarchy
  * @author Douglas Skrypa
- * @version 2015.02.09
+ * @version 2015.02.10
  * https://github.com/dskrypa/Java_Spring15
  */
 @SuppressWarnings("unused")
@@ -20,9 +20,38 @@ public class ShapesTestSuite {
 	}
 	
 	@Test
-	public void testParallel() {
+	public void testParallel1() {
 		Point a = new Point(0,0), b = new Point(1,1), c = new Point(0,1), d = new Point(1,2);
 		Point v1 = a.getVector(b), v2 = c.getVector(d);
+		assertTrue(v1.isParallel(v2));
+	}
+	
+	@Test
+	public void testParallel2() {
+		Point a = new Point(0,0), b = new Point(1,1), c = new Point(0,1), d = new Point(2,3);
+		Point v1 = a.getVector(b), v2 = c.getVector(d);
+		assertTrue(v1.isParallel(v2));
+	}
+	
+	@Test
+	public void testParallel3() {
+		Point a = new Point(0,0), b = new Point(1,1), c = new Point(0,1), d = new Point(2,3);
+		Point v1 = a.getVector(b), v2 = c.getVector(d);
+		assertTrue(v1.isParallel(v2));
+	}
+	
+	@Test
+	public void testParallel4() {
+		Point a = new Point(0,0), b = new Point(1,1), c = new Point(0,1), d = new Point(2,3);
+		Point v1 = a.getVector(b), v2 = c.getVector(d);
+		assertTrue(v1.isParallel(v2));
+	}
+	
+	@Test
+	public void testParallels() {
+		Point a = new Point(0,0), b = new Point(0,3), c = new Point(4,3), d = new Point(5,0);
+		Point v1 = b.getVector(c);
+		Point v2 = d.getVector(a);
 		assertTrue(v1.isParallel(v2));
 	}
 	
@@ -58,7 +87,7 @@ public class ShapesTestSuite {
 	
 	@Test
 	public void testGoodTrapezoidConstruction() {
-		Point a = new Point(0,0), c = new Point(0,3), b = new Point(4,3), d = new Point(0,5);
+		Point a = new Point(0,0), b = new Point(0,3), c = new Point(4,3), d = new Point(5,0);
 		Trapezoid t = new Trapezoid(a, b, c, d);
 		assertNotNull(t);
 	}
@@ -149,7 +178,7 @@ public class ShapesTestSuite {
 	
 	@Test
 	public void testTrapezoidArea() {
-		Point a = new Point(0,0), c = new Point(0,3), b = new Point(4,3), d = new Point(0,5);
+		Point a = new Point(0,0), c = new Point(0,3), b = new Point(4,3), d = new Point(5,0);
 		Trapezoid t = new Trapezoid(a, b, c, d);
 		assertEquals(13.5, t.getArea(), 0.0000001);
 	}

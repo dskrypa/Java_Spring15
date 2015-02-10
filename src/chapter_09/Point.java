@@ -3,7 +3,7 @@ package chapter_09;
 /**
  * Chapter 9 - Problem 8: Quadrilateral Inheritance Hierarchy
  * @author Douglas Skrypa
- * @version 2015.02.09
+ * @version 2015.02.10
  * https://github.com/dskrypa/Java_Spring15
  */
 public class Point {
