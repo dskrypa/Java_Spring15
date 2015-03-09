@@ -2,6 +2,7 @@ package chapter_12;
 
 import java.awt.Graphics;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +40,10 @@ dragging the mouse.
 
 Also, update the JLabel in mouseDragged with the current position of the mouse.
 
+
+
+
+
 Create a constructor for DrawPanel that has a single JLabel parameter.
 In the constructor, initialize statusLabel with the value passed to the parameter.
 Also initialize array shapes with 100 entries, shapeCount to 0, shapeType to the value that
@@ -72,32 +77,38 @@ Finally, create a test class that initializes and displays the DrawFrame to exec
 /**
  * Chapter 12 - Problem 17: Interactive Drawing Application
  * @author Douglas Skrypa
- * @version 2015.02.26
+ * @version 2015.03.09
  */
 public class DrawPanel extends JPanel {
 	private enum ShapeType {
 		LINE(MyLine.class), OVAL(MyOval.class), RECTANGLE(MyRectangle.class);
 		private Class<?> c;
-		private ShapeType(final Class<?> c) {
-			this.c = c;
-		}
-		public Class<?> getShapeClass() {
-			return c;
-		}
+		private ShapeType(final Class<?> c) {	this.c = c;}
+		public Class<?> getShapeClass() {	return c;}
 	}
 	private static final long serialVersionUID = 773549807044593116L;
 
-	private List<MyShape> shapes;
-	private int shapeCount = 0;
-	private ShapeType stype = ShapeType.LINE;
-	private MyShape currentShape = null;
-	private Color currentColor = Color.BLACK;
-	private boolean filledShape = false;
 	private JLabel statusLabel;
+	private List<MyShape> shapes;
+	private Color currentColor, backgroundColor;
+	private ShapeType currentShapeType;
+	private MyShape currentShape = null;
+	private boolean filledShape = false;
+	
 	
 	
 	public static void main(final String[] args) {
 		System.out.println("DrawPanel Test");
+		
+		for (ShapeType st : ShapeType.values()) {
+			if (st.getShapeClass().getGenericSuperclass() == MyPolygon.class) {
+				System.out.println(st.getShapeClass().getCanonicalName() + " is a MyPolygon");
+			} else {
+				System.out.println(st.getShapeClass().getCanonicalName() + " is a MyShape");
+			}
+		}
+		
+		
 		ShapeType st = ShapeType.LINE;
 		Class<?> sc = st.getShapeClass();
 		for (Constructor<?> c : sc.getConstructors()) {
@@ -110,13 +121,43 @@ public class DrawPanel extends JPanel {
 	}
 	
 	
-	public DrawPanel() {
+	public DrawPanel(final JLabel label) {
+		statusLabel = label;
 		shapes = new ArrayList<>();
+		currentColor = Color.BLACK;
+		backgroundColor = Color.WHITE;
+		currentShapeType = ShapeType.LINE;
 	}
 	
 	public void drawShape() {
-		Class<?> sc = stype.getShapeClass();
-		sc.getTypeParameters();
+		Class<?> sc = currentShapeType.getShapeClass();
+		MyShape s = null;
+		Constructor<MyShape> con = null;
+		if (sc.getGenericSuperclass() == MyPolygon.class) {
+			try {
+				con = (Constructor<MyShape>) sc.getConstructor(int.class,int.class,int.class,int.class,Color.class,boolean.class);
+			} catch (NoSuchMethodException | SecurityException e) {
+				e.printStackTrace();
+			}
+			try {
+				s = con.newInstance(0,0,0,0,currentColor,filledShape);
+			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+				e.printStackTrace();
+			}
+		} else {
+			try {
+				con = (Constructor<MyShape>) sc.getConstructor(int.class,int.class,int.class,int.class,Color.class);
+			} catch (NoSuchMethodException | SecurityException e) {
+				e.printStackTrace();
+			}
+			try {
+				s = con.newInstance(0,0,0,0,currentColor);
+			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		
 		
 		
 		//MyShape s = null;
@@ -128,8 +169,15 @@ public class DrawPanel extends JPanel {
 	
 
 	public List<MyShape> getShapes() {	return shapes;}
+	public int getShapeCount() {		return getShapes().size();}
+	public Color getDrawColor() {		return currentColor;}
+	public Color getBackgroundColor() {	return backgroundColor;}
+	public ShapeType getShapeType() {	return currentShapeType;}
+	public MyShape getCurrentShape() {	return currentShape;}
+	public boolean doFill() {		return filledShape;}
+	public JLabel getLabel() {		return statusLabel;}
 	
-	public void setShapeType(final ShapeType type) {	stype = type;}
+	public void setShapeType(final ShapeType type) {	currentShapeType = type;}
 	public void setCurrentColor(final Color color) {	currentColor = color;}
 	public void setFilledShape(final boolean fill) {	filledShape = fill;}
 	
