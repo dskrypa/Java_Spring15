@@ -1,9 +1,11 @@
 package chapter_12;
 
 import java.awt.Graphics;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,36 +20,8 @@ the drawing on the DrawPanel by indicating that the system should call method pa
 
 Class DrawPanel should also provide event handling to enable the user to draw with the mouse.
 
-Create a single inner class that both extends MouseAdapter and implements MouseMotionListener to
-handle all mouse events in one class.
-
-In the inner class, override method mousePressed so that it assigns currentShape a new shape
-of the type specified by shapeType and initializes both points to the mouse position.
-
-Next, override method mouseReleased to finish drawing the current shape and place it in the array.
-Set the second point of currentShape to the current mouse position and add currentShape to the array.
-
-Instance variable shapeCount determines the insertion index. Set currentShape to null and call method
-repaint to update the drawing with the new shape.
-
-Override method mouseMoved to set the text of the statusLabel so that it displays the mouse
-coordinates—this will update the label with the coordinates every time the user moves (but does
-not drag) the mouse within the DrawPanel.
-
-Next, override method mouseDragged so that it sets the second point of the currentShape to the
-current mouse position and calls method repaint. This will allow the user to see the shape while
-dragging the mouse.
-
-Also, update the JLabel in mouseDragged with the current position of the mouse.
 
 
-
-
-
-Create a constructor for DrawPanel that has a single JLabel parameter.
-In the constructor, initialize statusLabel with the value passed to the parameter.
-Also initialize array shapes with 100 entries, shapeCount to 0, shapeType to the value that
-represents a line, currentShape to null and currentColor to Color.BLACK.
 The constructor should then set the background color of the DrawPanel to Color.WHITE and
 register  the  MouseListener and  MouseMotionListener so  the  JPanel properly handles mouse events.
 
@@ -80,6 +54,35 @@ Finally, create a test class that initializes and displays the DrawFrame to exec
  * @version 2015.03.09
  */
 public class DrawPanel extends JPanel {
+	
+	private class MouseHandler extends MouseAdapter implements MouseMotionListener {
+		@Override
+		public void mousePressed(final MouseEvent e) {
+			//assigns currentShape a new shape of the type specified by shapeType and initializes both points to the mouse position.
+		}
+		
+		@Override
+		public void mouseReleased(final MouseEvent e) {
+			//finish drawing the current shape and place it in the array. Set the second point of currentShape to the current mouse position and add currentShape to the array.
+		}
+		
+		//Instance variable shapeCount determines the insertion index. Set currentShape to null and call method repaint to update the drawing with the new shape.
+		
+		@Override
+		public void mouseMoved(final MouseEvent e) {
+			//set the text of the statusLabel so that it displays the mouse coordinates—this will update the label with the coordinates every time the user moves (but does not drag) the mouse within the DrawPanel.
+		}
+		
+		@Override
+		public void mouseDragged(final MouseEvent e) {
+			//sets the second point of the currentShape to the current mouse position and calls method repaint. This will allow the user to see the shape while dragging the mouse.
+			//Also, update the JLabel in mouseDragged with the current position of the mouse.
+		}
+		
+		
+	}
+	
+	
 	private enum ShapeType {
 		LINE(MyLine.class), OVAL(MyOval.class), RECTANGLE(MyRectangle.class);
 		private Class<?> c;
@@ -94,7 +97,7 @@ public class DrawPanel extends JPanel {
 	private ShapeType currentShapeType;
 	private MyShape currentShape = null;
 	private boolean filledShape = false;
-	
+	private MouseHandler mh;
 	
 	
 	public static void main(final String[] args) {
@@ -127,6 +130,10 @@ public class DrawPanel extends JPanel {
 		currentColor = Color.BLACK;
 		backgroundColor = Color.WHITE;
 		currentShapeType = ShapeType.LINE;
+		
+		mh = new MouseHandler();
+		this.addMouseListener(mh);
+		this.addMouseMotionListener(mh);
 	}
 	
 	public void drawShape() {
