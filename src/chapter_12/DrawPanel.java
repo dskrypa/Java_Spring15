@@ -14,60 +14,56 @@ import javax.swing.JPanel;
 
 import com.sun.prism.paint.Color;
 
-/*
-Methods clearLastShape and clearDrawing should call repaint (inherited from JPanel) to refresh
-the drawing on the DrawPanel by indicating that the system should call method paintComponent.
-
-Class DrawPanel should also provide event handling to enable the user to draw with the mouse.
-
-
-
-The constructor should then set the background color of the DrawPanel to Color.WHITE and
-register  the  MouseListener and  MouseMotionListener so  the  JPanel properly handles mouse events.
-
-*/
-
-
 /**
  * Chapter 12 - Problem 17: Interactive Drawing Application
  * @author Douglas Skrypa
- * @version 2015.03.09
+ * @version 2015.03.19
  */
 public class DrawPanel extends JPanel {
 	
 	private class MouseHandler extends MouseAdapter implements MouseMotionListener {
 		@Override
 		public void mousePressed(final MouseEvent e) {
-			//assigns currentShape a new shape of the type specified by shapeType and initializes both points to the mouse position.
+			int x = e.getX();
+			int y = e.getY();
+			initNewShape(x, y);
+			repaint();
 		}
 		
 		@Override
 		public void mouseReleased(final MouseEvent e) {
-			//finish drawing the current shape and place it in the array. Set the second point of currentShape to the current mouse position and add currentShape to the array.
+			int x = e.getX();
+			int y = e.getY();
+			getCurrentShape().setX2(x);
+			getCurrentShape().setY2(y);
+			getShapes().add(getCurrentShape());
+			currentShape = null;
+			repaint();
 		}
-		
-		//Instance variable shapeCount determines the insertion index. Set currentShape to null and call method repaint to update the drawing with the new shape.
 		
 		@Override
 		public void mouseMoved(final MouseEvent e) {
-			//set the text of the statusLabel so that it displays the mouse coordinates—this will update the label with the coordinates every time the user moves (but does not drag) the mouse within the DrawPanel.
+			int x = e.getX();
+			int y = e.getY();
+			getLabel().setText("(" + x + ", " + y + ")");
 		}
 		
 		@Override
 		public void mouseDragged(final MouseEvent e) {
-			//sets the second point of the currentShape to the current mouse position and calls method repaint. This will allow the user to see the shape while dragging the mouse.
-			//Also, update the JLabel in mouseDragged with the current position of the mouse.
+			int x = e.getX();
+			int y = e.getY();
+			getLabel().setText("(" + x + ", " + y + ")");
+			getCurrentShape().setX2(x);
+			getCurrentShape().setY2(y);
+			repaint();
 		}
-		
-		
 	}
-	
 	
 	private enum ShapeType {
 		LINE(MyLine.class), OVAL(MyOval.class), RECTANGLE(MyRectangle.class);
 		private Class<?> c;
 		private ShapeType(final Class<?> c) {	this.c = c;}
-		public Class<?> getShapeClass() {	return c;}
+		public Class<?> getShapeClass() {		return c;}
 	}
 	private static final long serialVersionUID = 773549807044593116L;
 
@@ -78,31 +74,6 @@ public class DrawPanel extends JPanel {
 	private MyShape currentShape = null;
 	private boolean filledShape = false;
 	private MouseHandler mh;
-	
-	
-	public static void main(final String[] args) {
-		System.out.println("DrawPanel Test");
-		
-		for (ShapeType st : ShapeType.values()) {
-			if (st.getShapeClass().getGenericSuperclass() == MyPolygon.class) {
-				System.out.println(st.getShapeClass().getCanonicalName() + " is a MyPolygon");
-			} else {
-				System.out.println(st.getShapeClass().getCanonicalName() + " is a MyShape");
-			}
-		}
-		
-		
-		ShapeType st = ShapeType.LINE;
-		Class<?> sc = st.getShapeClass();
-		for (Constructor<?> c : sc.getConstructors()) {
-			System.out.println("Constructor: " + c.getName());
-			for (Class<?> pc : c.getParameterTypes()) {
-				System.out.println(pc.getCanonicalName());
-			}
-			
-		}
-	}
-	
 	
 	public DrawPanel(final JLabel label) {
 		statusLabel = label;
@@ -116,8 +87,9 @@ public class DrawPanel extends JPanel {
 		this.addMouseMotionListener(mh);
 	}
 	
-	public void drawShape() {
-		Class<?> sc = currentShapeType.getShapeClass();
+	@SuppressWarnings("unchecked")
+	public void initNewShape(final int x, final int y) {
+		Class<?> sc = getShapeType().getShapeClass();
 		MyShape s = null;
 		Constructor<MyShape> con = null;
 		if (sc.getGenericSuperclass() == MyPolygon.class) {
@@ -127,7 +99,7 @@ public class DrawPanel extends JPanel {
 				e.printStackTrace();
 			}
 			try {
-				s = con.newInstance(0,0,0,0,currentColor,filledShape);
+				s = con.newInstance(x,y,x,y,getDrawColor(),doFill());
 			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 				e.printStackTrace();
 			}
@@ -138,23 +110,14 @@ public class DrawPanel extends JPanel {
 				e.printStackTrace();
 			}
 			try {
-				s = con.newInstance(0,0,0,0,currentColor);
+				s = con.newInstance(x,y,x,y,getDrawColor());
 			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 				e.printStackTrace();
 			}
 		}
-		
-		
-		
-		
-		//MyShape s = null;
-		//Constructor<MyShape> c = stype.getShapeClass().getConstructor(parameterTypes)
-		//Constructor<?>[] cs = stype.getShapeClass().getConstructors();
-		//cs[0].
+		currentShape = s;
 	}
 	
-	
-
 	public List<MyShape> getShapes() {	return shapes;}
 	public int getShapeCount() {		return getShapes().size();}
 	public Color getDrawColor() {		return currentColor;}
@@ -170,33 +133,27 @@ public class DrawPanel extends JPanel {
 	
 	@Override
 	public void paintComponent(final Graphics g) {
-		
+		if (currentShape != null) {
+			currentShape.draw(g);
+		}
+		for (MyShape s : shapes) {
+			s.draw(g);
+		}
 	}
 	
 	/**
-	 * Remove the last shape drawn by decrementing shapeCount; ensure that it doesn't
-	 * go below 0
+	 * Remove the last shape drawn
 	 */
 	public void clearLastShape() {
-		/*
-		 * Methods clearLastShape and clearDrawing should call repaint (inherited from JPanel)
-		 * to refresh the drawing on the DrawPanel by indicating that the system should call
-		 * method paintComponent.
-		 */
+		shapes.remove(shapes.size()-1);
+		repaint();
 	}
 	
 	/**
-	 * Remove all shapes in the current drawing by setting shapeCount to 0
+	 * Remove all shapes in the current drawing
 	 */
 	public void clearDrawing() {
-		
+		shapes.clear();
+		repaint();
 	}
-	
-	
-	
-	
-	
-	
-	
-	
 }
