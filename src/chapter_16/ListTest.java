@@ -1,23 +1,28 @@
-package chapter_16.p12;
+package chapter_16;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
 /**
- * Chapter 16 - Problem 12
- * @author Douglas Skrypa
- * @version 2015.05.05
+ * Chapter 16 - Figure 3
  */
 public class ListTest {
 	
 	public static void main(String[] args) {
 		String[] colors = {"black", "yellow", "green", "blue", "violet", "silver"};
-		List<String> list1 = new LinkedList<>(Arrays.asList(colors));
+		List<String> list1 = new LinkedList<>();
+		
+		for (String color : colors) {
+			list1.add(color);
+		}
 		
 		String[] colors2 = {"gold", "white", "brown", "blue", "gray", "silver"};
-		List<String> list2 = new LinkedList<>(Arrays.asList(colors2));
+		List<String> list2 = new LinkedList<>();
+		
+		for (String color : colors2) {
+			list2.add(color);
+		}
 		
 		list1.addAll(list2);
 		list2 = null;
