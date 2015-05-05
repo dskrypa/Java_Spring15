@@ -160,12 +160,14 @@ public class DrawPanel extends JPanel {
 	@Override
 	public void paintComponent(final Graphics g) {
 		super.paintComponent(g);
+		/*
 		if (currentShape != null) {
 			currentShape.draw(g);
 		}
 		for (MyShape s : shapes) {
 			s.draw(g);
 		}
+		*/
 	}
 	
 	/**

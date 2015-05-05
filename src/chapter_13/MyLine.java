@@ -1,7 +1,7 @@
 package chapter_13;
 
-import java.awt.Color;
-import java.awt.Graphics;
+//import java.awt.Color;
+//import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Paint;
 
@@ -32,7 +32,7 @@ public class MyLine extends MyShape {
 
 	@Override
 	public void draw(Graphics2D g) {
-		g.setColor(getColor());
+		//g.setColor(getColor());
 		g.drawLine(getX1(), getY1(), getX2(), getY2());
 	}
 }

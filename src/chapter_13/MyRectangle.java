@@ -1,7 +1,7 @@
 package chapter_13;
 
-import java.awt.Color;
-import java.awt.Graphics;
+//import java.awt.Color;
+//import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Paint;
 
@@ -33,7 +33,7 @@ public class MyRectangle extends MyPolygon {
 
 	@Override
 	public void draw(Graphics2D g) {
-		g.setColor(getColor());
+		//g.setColor(getColor());
 		g.drawRect(getUpperLeftX(), getUpperLeftY(), getWidth(), getHeight());
 		if (fill()) {
 			g.fillRect(getUpperLeftX(), getUpperLeftY(), getWidth(), getHeight());
